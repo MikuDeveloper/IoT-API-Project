@@ -5,9 +5,11 @@ import { UsersController } from './users/users.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import process from 'process';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.HOST,
