@@ -7,32 +7,35 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { User } from '../entities/user.interface';
+import { UsersService } from './users.service';
+import { User } from '../entities/user.entity';
 
 @Controller('users')
 export class UsersController {
-  @Post()
-  create(@Body() body: User): string {
-    return `Hiciste POST a usuarios con la data: ${body.name} y ${body.password}.`;
-  }
+  constructor(private usersService: UsersService) {}
 
-  @Get(':id')
-  findOne(@Param('id') param: string) {
-    return `Hiciste GET a usuarios para obtener el usuario con el id: ${param}.`;
+  @Post()
+  createUser(@Body() user: User) {
+    return this.usersService.createOrUpdateOne(user);
   }
 
   @Get()
-  findAll(): string {
-    return 'Hiciste GET a usuarios para obtener todos los usuarios.';
+  getUsers() {
+    return this.usersService.findAll();
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() user: User) {
-    return `Hiciste PUT a usuarios para actualizar al usuario con el id: ${id} y la data: ${user.name + ' y ' + user.password}.`;
+  @Get(':id')
+  getUserByEmail(@Param('id') email: string) {
+    return this.usersService.findOne(email);
+  }
+
+  @Put()
+  updateUser(@Body() user: User) {
+    return this.usersService.createOrUpdateOne(user);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return `Hiciste DELETE a usuarios para eliminar al usuario con el id: ${id}.`;
+  deleteUser(@Param('id') email: string) {
+    return this.usersService.deleteOne(email);
   }
 }
