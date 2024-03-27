@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from '../entities/user.entity';
-import { AuthorizationGuard } from '../authorization/jwt/authorization.guard';
+import { AuthorizationGuard } from '../guards/authorization.guard';
 
 @Controller('users')
 export class UsersController {
