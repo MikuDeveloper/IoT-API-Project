@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './authentication/auth.module';
+import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -19,7 +21,13 @@ import { UsersModule } from './users/users.module';
       entities: [join(__dirname, '**/**.entity{.ts,.js}')],
       synchronize: false,
     }),
+    AuthModule,
     UsersModule,
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET || 'Miku0139',
+      signOptions: { expiresIn: '7d' },
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

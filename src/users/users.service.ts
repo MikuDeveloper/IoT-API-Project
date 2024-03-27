@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
@@ -10,19 +10,32 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async createOrUpdateOne(user: User): Promise<void> {
-    await this.usersRepository.save(user);
+  async createOrUpdateOne(user: User): Promise<Omit<User, 'password'>> {
+    const email = user.email;
+    const exist = !!(await this.usersRepository.findOneBy({ email }));
+
+    if (exist) {
+      throw new BadRequestException(
+        'Email already in use.',
+        'authentication/email-already-in-use',
+      );
+    }
+
+    const resUser = await this.usersRepository.save(user);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...result } = resUser;
+    return result;
   }
 
   findAll(): Promise<User[]> {
     return this.usersRepository.find();
   }
 
-  findOne(email: string): Promise<User> {
-    return this.usersRepository.findOneBy({ email });
+  findOne(uuid: string): Promise<User> {
+    return this.usersRepository.findOneBy({ uuid });
   }
 
-  async deleteOne(email: string): Promise<void> {
-    await this.usersRepository.delete(email);
+  async deleteOne(uuid: string): Promise<void> {
+    await this.usersRepository.delete(uuid);
   }
 }

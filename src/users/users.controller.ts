@@ -6,9 +6,11 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from '../entities/user.entity';
+import { AuthorizationGuard } from '../authorization/jwt/authorization.guard';
 
 @Controller('users')
 export class UsersController {
@@ -19,23 +21,27 @@ export class UsersController {
     return this.usersService.createOrUpdateOne(user);
   }
 
+  @UseGuards(AuthorizationGuard)
   @Get()
   getUsers() {
     return this.usersService.findAll();
   }
 
-  @Get(':id')
-  getUserByEmail(@Param('id') email: string) {
+  @UseGuards(AuthorizationGuard)
+  @Get(':uuid')
+  getUserByEmail(@Param('uuid') email: string) {
     return this.usersService.findOne(email);
   }
 
-  @Put()
+  @UseGuards(AuthorizationGuard)
+  @Put(':uuid')
   updateUser(@Body() user: User) {
     return this.usersService.createOrUpdateOne(user);
   }
 
-  @Delete(':id')
-  deleteUser(@Param('id') email: string) {
-    return this.usersService.deleteOne(email);
+  @UseGuards(AuthorizationGuard)
+  @Delete(':uuid')
+  deleteUser(@Param('uuid') uuid: string) {
+    return this.usersService.deleteOne(uuid);
   }
 }
