@@ -18,7 +18,7 @@ export class UsersController {
 
   @Post()
   createUser(@Body() user: User) {
-    return this.usersService.createOrUpdateOne(user);
+    return this.usersService.createOne(user);
   }
 
   @UseGuards(AuthorizationGuard)
@@ -35,8 +35,8 @@ export class UsersController {
 
   @UseGuards(AuthorizationGuard)
   @Put(':uuid')
-  updateUser(@Body() user: User) {
-    return this.usersService.createOrUpdateOne(user);
+  updateUser(@Param('uuid') uuid: string, @Body() data: any) {
+    return this.usersService.updateOne(uuid, data);
   }
 
   @UseGuards(AuthorizationGuard)

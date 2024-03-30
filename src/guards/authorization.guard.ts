@@ -23,7 +23,6 @@ export class AuthorizationGuard implements CanActivate {
       request.user = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET || 'Miku0139',
       });
-      console.log(request.user);
     } catch (error) {
       throw new UnauthorizedException();
     }

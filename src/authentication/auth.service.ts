@@ -14,11 +14,11 @@ export class AuthService {
   async signUp(user: User) {
     user.uuid = uuidv4();
     user.password = await bcrypt.hash(user.password, 12);
-    return this.usersService.createOrUpdateOne(user);
+    return this.usersService.createOne(user);
   }
 
   async signIn(email: string, password: string) {
-    const user = await this.usersService.findOne(email);
+    const user = await this.usersService.findOneByEmail(email);
     if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new BadRequestException(
         'Incorrect email or password.',
